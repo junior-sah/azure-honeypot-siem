@@ -69,6 +69,55 @@ WindowsEvents
 Created a Sentinel Workbook with a world map showing attack origins
 
 JSON-based query to visualize data by IP country
+```json
+{
+	"type": 3,
+	"content": {
+	"version": "KqlItem/1.0",
+	"query": "let GeoIPDB_FULL = _GetWatchlist(\"geoip\");\nlet WindowsEvents = SecurityEvent;\nWindowsEvents | where EventID == 4625\n| order by TimeGenerated desc\n| evaluate ipv4_lookup(GeoIPDB_FULL, IpAddress, network)\n| summarize FailureCount = count() by IpAddress, latitude, longitude, cityname, countryname\n| project FailureCount, AttackerIp = IpAddress, latitude, longitude, city = cityname, country = countryname,\nfriendly_location = strcat(cityname, \" (\", countryname, \")\");",
+	"size": 3,
+	"timeContext": {
+		"durationMs": 2592000000
+	},
+	"queryType": 0,
+	"resourceType": "microsoft.operationalinsights/workspaces",
+	"visualization": "map",
+	"mapSettings": {
+		"locInfo": "LatLong",
+		"locInfoColumn": "countryname",
+		"latitude": "latitude",
+		"longitude": "longitude",
+		"sizeSettings": "FailureCount",
+		"sizeAggregation": "Sum",
+		"opacity": 0.8,
+		"labelSettings": "friendly_location",
+		"legendMetric": "FailureCount",
+		"legendAggregation": "Sum",
+		"itemColorSettings": {
+		"nodeColorField": "FailureCount",
+		"colorAggregation": "Sum",
+		"type": "heatmap",
+		"heatmapPalette": "greenRed"
+		}
+	}
+	},
+	"name": "query - 0"
+}
+```
+### Results
+<img src="images/attach-map.png" alt="Attack Map" width="600"/>
+
+From just about 30 hours of the VM being live, there were thousands of failed login attacks attempts on the system from all over the world. The visual attack map does an incredible job of showcasing the geological variety, highlighting larger attack frequencies with bigger circles. The largest attack was from an IP in Longdeville in Trinidad and Tobago, while the closest attack was an IP from Randolph, MA. 
+
+While looking at the data, I noticed a small number of a successful login attempts as well and decided to create another map visualization to represent those. 
+
+<img src="images/attach-map-success.png" alt="Attack Map" width="600"/>
+
+There were multiple successful logins into the honeypot from bruteforce attacks due to weak configuration including a weak password. But the event IDs following the successful logins were more representative of the hacker's actions. 
+
+<img src="images/successful-login-logs.png" alt="Success Logs" width="600"/>
+
+I noticed a pattern that with every 4624 event ID (successful login), a 4672 event ID almost always followed. Event ID 4672 could represent lateral movement and privilege escalation, the attacker immediately is immediately granted administrator permissions when logged into an admin account. In one instance, a large number of event ID 5379 instances followed, which represent an attempt to read stored credentials. In a normal system, this could represent network drives or applications simply being logged into. In a stripped honeypot environment, a large amount of events of this nature may suggest an attempt to harvest credentials. 
 
 ## 🎯 Learning Outcomes
 Through this project, I developed and applied a range of technical and analytical skills critical to cybersecurity operations:
@@ -93,7 +142,4 @@ Created a Sentinel Workbook and visual attack map showing the geographic origin 
 
 🔐 Security Misconfiguration Awareness:
 Observed how firewall misconfigurations (e.g., exposed port 3389) can lead to rapid attack attempts, reinforcing principles of attack surface reduction.
-
-📁 Project Documentation & GitHub Presentation:
-Structured and documented a complete honeypot project on GitHub. Learned best practices for presenting technical projects and security research.
 
