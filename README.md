@@ -108,15 +108,15 @@ JSON-based query to visualize data by IP country
 
 From just about 30 hours of the VM being live, there were thousands of failed login attacks attempts on the system from all over the world. The visual attack map does an incredible job of showcasing the geological variety, highlighting larger attack frequencies with bigger circles. The largest attack was from an IP in Longdeville in Trinidad and Tobago, while the closest attack was an IP from Randolph, MA. 
 
-While looking at the data, I noticed a small number of a successful login attempts as well and decided to create another map visualization to represent those. 
+While looking at the data, I noticed a small number of a successful login attempts as well and decided to create another Microsoft Workbook map visualization. 
 
 <img src="images/attack-map-success.png" alt="Attack Map" width="600"/>
 
-There were multiple successful logins into the honeypot from bruteforce attacks due to weak configuration including a weak password. But the event IDs following the successful logins were more representative of the hacker's actions. 
+There were multiple successful logins into the honeypot from bruteforce attacks due to weak configuration and a weak password. But the event IDs following the successful logins were more representative of the hacker's actions. 
 
 <img src="images/successful-login-logs.png" alt="Success Logs" width="600"/>
 
-I noticed a pattern that with every 4624 event ID (successful login), a 4672 event ID almost always followed. Event ID 4672 could represent lateral movement and privilege escalation, the attacker immediately is immediately granted administrator permissions when logged into an admin account. In one instance, a large number of event ID 5379 instances followed, which represent an attempt to read stored credentials. In a normal system, this could represent network drives or applications simply being logged into. In a stripped honeypot environment, a large amount of events of this nature may suggest an attempt to harvest credentials. 
+I noticed a pattern that with every 4624 event ID (successful login), a 4672 event ID almost always followed. Event ID 4672 could represent lateral movement and privilege escalation, the attacker is immediately granted administrator permissions when logged into an admin account. In one instance, a large number of event ID 5379 instances followed a successful login. This ID typically represents stored credentials being read in Windows Credential Manager. In a normal system, this could represent network drives or applications simply being logged into. In a stripped honeypot environment, a large amount of events of this nature may suggest an attempt to harvest credentials. 
 
 ## 🎯 Learning Outcomes
 Through this project, I developed and applied a range of technical and analytical skills critical to cybersecurity operations:
