@@ -20,7 +20,6 @@ This project simulates real-world brute-force attacks using a Windows 10 virtual
  
 <img src="images/architecture-honeypot-diagram.png" alt="Azure Honeypot Architecture" width="600"/>
 
-
 - This diagram represents the basic honeypot setup within Azure. 
 ---
 
@@ -105,13 +104,13 @@ JSON-based query to visualize data by IP country
 }
 ```
 ### Results
-<img src="images/attach-map.png" alt="Attack Map" width="600"/>
+<img src="images/attack-map.png" alt="Attack Map" width="600"/>
 
 From just about 30 hours of the VM being live, there were thousands of failed login attacks attempts on the system from all over the world. The visual attack map does an incredible job of showcasing the geological variety, highlighting larger attack frequencies with bigger circles. The largest attack was from an IP in Longdeville in Trinidad and Tobago, while the closest attack was an IP from Randolph, MA. 
 
 While looking at the data, I noticed a small number of a successful login attempts as well and decided to create another map visualization to represent those. 
 
-<img src="images/attach-map-success.png" alt="Attack Map" width="600"/>
+<img src="images/attack-map-success.png" alt="Attack Map" width="600"/>
 
 There were multiple successful logins into the honeypot from bruteforce attacks due to weak configuration including a weak password. But the event IDs following the successful logins were more representative of the hacker's actions. 
 
